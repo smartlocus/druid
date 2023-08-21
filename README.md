@@ -61,7 +61,7 @@ Note i have disabled and removed persistence i had before. If you need persisite
 When you deploy this, you will have druid-broker-6f685d4478-rqtq8,druid-coordinator-5746cbcb8d-kjflz,druid-historical-0,druid-middle-manager-0 Containers running.
 Be sure before hand before you deploy druid that you have set up your postgres and S3 Storage correctly .
 
-```
+
 
 
 
