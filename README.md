@@ -17,6 +17,54 @@
   ~ under the License.
   -->
 
+
+  ## Official druid helmchart forked and  modified for easily andd functioning purposes
+
+```
+# added S3 extensiin storage. Create your own S3 stoarge or use S3 services from amazon for exaple. i am using in
+my cae my own S3 stoareg using rook ceph that i manage personally. Note you need to chnaghe the S3 endpoint url and the secretkey
+and Accesskey credentials
+
+  druid_storage_type: s3
+  druid_storage_bucket: datalake-bucket (chnage this to your bucket name)
+  druid_storage_baseKey: druid/segments
+  druid_s3_accessKey: BCS8W44B9Z06ZH(chnahe this )
+  druid_s3_secretKey: nuWyyc4hC3h1Cfb54c8m3FJow6Lr(change this)
+  druid_s3_protocol: http
+  druid_s3_endpoint_url: http://10.#.#.#97:80
+
+
+# added Postgres connection for storing the metadata. Deploy your own Postgres Container and create a database with the name druid inside it.
+
+druid_extensions_loadList: '["druid-histogram", "druid-datasketches", "druid-lookups-cached-global", "postgresql-metadata-stor>
+  druid_metadata_storage_type: postgresql
+  druid_metadata_storage_connector_connectURI: jdbc:postgresql://sl-postgres.building00030:5432/druid   # buildiong00030 is the namespace.Change this to the namespace where your postgres container is running.
+  druid_metadata_storage_connector_user: myuser (chnage this also to the username you set in your postgres)
+  druid_metadata_storage_connector_password: mypassword (chnage this also to the password you set in ypur postgres)
+
+
+# If you have any running kafka cluster you want to consume from, modify the follwoin g part in the values.yaml file
+  druid_kafka_extraction_namespace: |
+    [
+      {
+        "namespace": "customer-lookup",
+        "type": "kafka",
+        "kafkaTopic": "enviro_info_forecast_rt_feed",
+        "kafkaProperties": {
+          "bootstrap.servers": "my-cluster-kafka-bootstrap.kafka:9092"  # This is the kafka endpoint bootstrap server
+        }
+      }
+    
+
+```
+Note i have disabled and removed persistence i had before. If you need persisitence create your peristent volume claims and add them to each container.
+When you deploy this, you will have druid-broker-6f685d4478-rqtq8,druid-coordinator-5746cbcb8d-kjflz,druid-historical-0,druid-middle-manager-0 Containers running.
+Be sure before hand before you deploy druid that you have set up your postgres and S3 Storage correctly .
+
+```
+
+
+
 [![Coverage Status](https://img.shields.io/codecov/c/gh/apache/druid?logo=codecov)](https://codecov.io/gh/apache/druid)
 [![Docker](https://img.shields.io/badge/container-docker-blue.svg?logo=docker)](https://hub.docker.com/r/apache/druid)
 [![Helm](https://img.shields.io/badge/helm-druid-5F90AB?logo=helm)](https://github.com/apache/druid/blob/master/helm/druid/README.md)
